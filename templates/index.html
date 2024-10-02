@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask App</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="top-container">
+    <div class="title">
+        Algorithm Visualization
+    </div>
+    <div class="options">
+        <h2>Select Algorithm</h2> 
+        <form action="/run" method="POST">
+            <div class="algorithms">
+                <label for="merge">
+                    Merge Sort
+                    <input type="checkbox" id="merge" name="merge">
+                </label>
+                <label for="bubble">
+                    Bubble Sort
+                    <input type="checkbox" id="bubble" name="bubble">
+                </label>
+                <label for="quick">
+                    Quick Sort
+                    <input type="checkbox" id="quick" name="quick">
+                </label>
+                <label for="radix">
+                    Radix Sort
+                    <input type="checkbox" id="radix" name="radix">
+                </label>
+            </div>
+            <button id="start" type="submit">Start</button>
+        </form>
+        
+       
+
+    </div>
+</div>
+  
+<div class="bottom-container">
+    {% if times %}
+    <div class="results">
+        <h2>Algorithm Execution Times:</h2>
+        <ul>
+            {% for algorithm, time in times.items() %}
+            <li>{{ algorithm }}: {{ time }} seconds</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
