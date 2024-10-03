@@ -5,8 +5,15 @@ from radix_sort import RadixSort
 import time
 
 
-def run(function_options):
+def run(function_options, input_list):
     data = [3,2,1,4,5,2,1,5,3,2]
+    # Cast the input list to a list of integers
+    try:
+        data = [int(x) for x in input_list.split(', ')]
+    except ValueError:
+        # Handle invalid input
+        print("Invalid input")
+        pass
     times = {"Merge_Sort":0,"Bubble_Sort":0,"Quick_Sort":0, "Radix_Sort": 0}
     print(function_options)
     if(function_options["Merge_Sort"] == True ):

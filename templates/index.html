@@ -32,6 +32,21 @@
                     <input type="checkbox" id="radix" name="radix">
                 </label>
             </div>
+            <label for="input_list">Input List(comma separated ", "):</label>
+            <input type="text" id="input_list" name="input_list" value="{{ input_list }}" style="width: 500px;">
+            <button id="generate-random" onclick="generateRandomNumbers()">Generate Numbers</button>
+            
+            <!-- Temporal script while i find a better way to generate random numbers-->
+            <script>
+                function generateRandomNumbers() {
+                  const numCount = 10; // number of random numbers to generate
+                  const maxNum = 100; // maximum random number
+                  const numbers = Array(numCount).fill(0).map(() => Math.floor(Math.random() * maxNum));
+                  const inputList = numbers.join(', ');
+                  document.getElementById('input_list').value = inputList;
+                }
+              </script>
+
             <button id="start" type="submit">Start</button>
         </form>
         

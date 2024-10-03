@@ -15,8 +15,9 @@ def run_algorithms():
         "Quick_Sort": 'quick' in request.form,
         "Radix_Sort": 'radix' in request.form
     }
-    times = run(selected_algorithms)
-    return render_template('index.html', times=times)
+    input_list = request.form.get('input_list', '')
+    times = run(selected_algorithms, input_list)
+    return render_template('index.html', times=times, input_list=input_list)
 
 
 if __name__ == '__main__':
