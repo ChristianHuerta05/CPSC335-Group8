@@ -45,7 +45,6 @@
 
             <button id="start" type="submit">Start</button>
         </form>
-       
     </div>
 </div>
   
@@ -73,69 +72,144 @@
             </tbody>
         </table>
     </div>
+    <div id="bottom-div">
+        <div id="bars"></div>
+    </div>
     {% endif %}
 </div>
 
-<!-- JavaScript for generating random numbers -->
-<script>
-     function generateRandomNumbers() {
-        // get the main input elements
+
+<script type="text/javascript">
+    // get times ready
+    let times = {};
+
+    // if times if avalliable use the Jinja2 syntax to get the data
+    '{% if times %}'
+    // get times
+    try {
+        times = JSON.parse('{{ times | tojson | safe }}');
+        console.log(times);
+    } catch (error) {
+        console.error('Error parsing times data:', error);
+    }
+    '{% endif %}'
+
+    // generate random numbers for input
+    function generateRandomNumbers() {
         const numCountElement = document.getElementById('numCount');
         const inputListElement = document.getElementById('input_list');
-        
-        // get the number the user inputed and turn it into a Number
+
+        // get the number of random numbers to generate
         let numCount = Number(numCountElement.value);
-        // set the highest value the random number can be
+
+        // set the max number to 100
         const maxNum = 100; 
-        
-        // generate the random numbers
+
+        // generate random numbers using math.random then fill the array with numbers using 0 as the initial value to fill the array
         const numbers = Array(numCount).fill(0).map(() => Math.floor(Math.random() * maxNum));
+        // join the numbers with a comma and space
         const inputList = numbers.join(', ');
-        
-        // add numbers to the input
         inputListElement.value = inputList;
     }
+
+    // draw the bars to visualize the time
+    function drawBars(times) {
+        const container = document.getElementById('bars');
+        // filter the times to geet only data that exists. First access times object then use filer to make sure the data is an array and the first element is a number. 
+        // then return as array of arrays
+        const usedTimes = Object.values(times).filter(data => Array.isArray(data) && typeof data[0] === 'number' );
+        // if no values then don't draw the bars
+        if (usedTimes.length === 0) {
+            return;
+        }
+
+        // get the max time from the array of times arrays and get the first element which is the time of each. only return max
+        const maxTime = Math.max.apply(null, usedTimes.map(time => time[0]));
+
+        // loop through the times and draw the bars
+        Object.entries(times).forEach(([algorithm, time]) => {
+            // if the time is not an array then return
+            if (!Array.isArray(time) ) {
+                return;
+            }
+
+            // create the bar container and label for it
+            const barContainer = document.createElement('div');
+            barContainer.className = 'bar-container';
+            const label = document.createElement('div');
+            label.className = 'label';
+
+            // set the text content of the label to the algorithm and the time
+            label.textContent = `${algorithm}: ${time[0].toFixed(8)}s`;
+
+            // create the bar and set the width of the bar to the time divided by the max time to make the bar always fit 
+            const bar = document.createElement('div');
+            bar.className = 'bar';
+            bar.style.transition = `width ${time[0]}s ease`;
+
+            // append the label and bar to the bar container and the bar container to the container
+            barContainer.appendChild(label);
+            barContainer.appendChild(bar);
+            container.appendChild(barContainer);
+
+            // slowly show the bar similar to how long the algorithm took
+            setTimeout(() => {
+                bar.style.width = `${(time[0] / maxTime) * 100}%`;
+            }, 100);
+        });
+    }
+
+    // if the times object is not empty then draw the bars
+    window.onload = () => {
+        if (Object.keys(times).length > 0) {
+            drawBars(times);
+        }
+    };
 </script>
 
 </body>
 
+
+
 <style>
-     body {
+    body {
         margin: 0;
         padding: 0;
         font-family: 'Roboto', sans-serif;
         background: linear-gradient(to bottom right, #35424a, #6e7f86);
         color: #f1f1f1;
         height: 100vh;
+        overflow-y: hidden;
+    }
+
+    #bottom-div{
+        background-color: white;
+        margin: 50px;
     }
 
     .top-container {
         background: rgba(53, 66, 74, 0.9);
         width: 100vw;
-        height: 50vh;
+        height: 30vh; 
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
         display: flex;
         flex-direction: column;
+        justify-content: center;
     }
 
     .title {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        font-size: 4rem;
+        font-size: 2rem;
+        text-align: center;
     }
 
     .bottom-container {
         width: 100vw;
-        height: 50vh;
+        height: 70vh; 
+        overflow-y: auto; 
     }
 
     .options {
         width: 100%;
-        height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -146,16 +220,37 @@
         display: flex;
         flex-direction: row;
         justify-content: center;
-        gap: 50px;
+        gap: 20px; 
         align-items: center;
-        margin-top: 15px;
+        margin-top: 10px;
         width: 100%;
-        font-size: large;
+        font-size: medium; 
     }
 
     .results {
-        padding: 20px;
+        padding: 10px;
         text-align: center;
+    }
+
+    .bar-container {
+        display: flex;
+        align-items: center;
+        margin: 5px 0;
+    }
+
+    .bar {
+        height: 20px; 
+        background-color: teal;
+        width: 0;
+        margin-right: 10px;
+
+    }
+
+    .label {
+        flex-shrink: 0;
+        width: 120px;
+        text-align: left;
+        color: black;
     }
 
     .times-table {
@@ -167,38 +262,33 @@
 
     .times-table th, .times-table td {
         border: 1px solid #ddd;
-        padding: 12px;
+        padding: 8px; 
         text-align: center;
     }
 
     .times-table th {
         background-color: rgba(53, 66, 74, 0.9);
         color: #f1f1f1;
-        font-size: 1.2rem;
+        font-size: 1rem; /
     }
 
     .times-table tr:nth-child(even) {
         background-color: rgba(255, 255, 255, 0.1);
     }
 
-    .times-table tr:hover {
-        background-color: rgba(110, 127, 134, 0.4);
-    }
 
     button {
-        background: linear-gradient(to right, #68d1ca, #4ecdc4);
+
+        background-color: #68d1ca;
         color: #555555;
         border: none;
-        padding: 10px 20px;
+        padding: 5px 10px; 
         cursor: pointer;
-        font-size: 1rem;
+        font-size: 0.9rem; 
         border-radius: 5px;
         margin-top: 10px;
-        transition: background 0.3s ease;
     }
 
-    button:hover {
-        background: linear-gradient(to right, #94efe9, #83f0e9);
-    }
+
 </style>
 </html>
