@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flask App</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css">
 </head>
 <body>
 <div class="top-container">
@@ -31,42 +31,174 @@
                     Radix Sort
                     <input type="checkbox" id="radix" name="radix">
                 </label>
+                <label for="linear">
+                    Linear Search
+                    <input type="checkbox" id="linear" name="linear">
+                </label>
             </div>
-            <label for="input_list">Input List(comma separated ", "):</label>
+
+            <label for="input_list">Input List (comma separated ", "):</label>
             <input type="text" id="input_list" name="input_list" value="{{ input_list }}" placeholder="Example: 2, 6, 8, 14, 5, 7" style="width: 500px;">
-            <button id="generate-random" onclick="generateRandomNumbers()">Generate Numbers</button>
-            
-            <!-- Temporal script while i find a better way to generate random numbers-->
-            <script>
-                function generateRandomNumbers() {
-                  const numCount = 80; // number of random numbers to generate
-                  const maxNum = 100; // maximum random number
-                  const numbers = Array(numCount).fill(0).map(() => Math.floor(Math.random() * maxNum));
-                  const inputList = numbers.join(', ');
-                  document.getElementById('input_list').value = inputList;
-                }
-              </script>
+            <input type="number" id="numCount" name="numCount" value="80" style="width: 50px;">
+
+            <button type="button" id="generate-random" onclick="generateRandomNumbers()">Generate Numbers</button>
 
             <button id="start" type="submit">Start</button>
         </form>
-        
        
-
     </div>
 </div>
   
 <div class="bottom-container">
     {% if times %}
     <div class="results">
+        <button onclick="window.location.href='/'">Clear</button>
         <h2>Algorithm Execution Times:</h2>
-        <ul>
-            {% for algorithm, time in times.items() %}
-            <li>{{ algorithm }}: {{ time }} seconds</li>
-            {% endfor %}
-        </ul>
+        <table class="times-table">
+            <thead>
+                <tr>
+                    <th>Algorithm</th>
+                    <th>Time (seconds)</th>
+                    <th>Peak Memory Use (KB)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for algorithm, time in times.items() %}
+                <tr>
+                    <td>{{ algorithm }}</td>
+                    <td>{{ time[0] }}</td>
+                    <td>{{ time[1] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
     {% endif %}
 </div>
 
+<!-- JavaScript for generating random numbers -->
+<script>
+     function generateRandomNumbers() {
+        // get the main input elements
+        const numCountElement = document.getElementById('numCount');
+        const inputListElement = document.getElementById('input_list');
+        
+        // get the number the user inputed and turn it into a Number
+        let numCount = Number(numCountElement.value);
+        // set the highest value the random number can be
+        const maxNum = 100; 
+        
+        // generate the random numbers
+        const numbers = Array(numCount).fill(0).map(() => Math.floor(Math.random() * maxNum));
+        const inputList = numbers.join(', ');
+        
+        // add numbers to the input
+        inputListElement.value = inputList;
+    }
+</script>
+
 </body>
+
+<style>
+     body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(to bottom right, #35424a, #6e7f86);
+        color: #f1f1f1;
+        height: 100vh;
+    }
+
+    .top-container {
+        background: rgba(53, 66, 74, 0.9);
+        width: 100vw;
+        height: 50vh;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .title {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 4rem;
+    }
+
+    .bottom-container {
+        width: 100vw;
+        height: 50vh;
+    }
+
+    .options {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .algorithms {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 50px;
+        align-items: center;
+        margin-top: 15px;
+        width: 100%;
+        font-size: large;
+    }
+
+    .results {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .times-table {
+        margin: 0 auto;
+        border-collapse: collapse;
+        width: 60%;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .times-table th, .times-table td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: center;
+    }
+
+    .times-table th {
+        background-color: rgba(53, 66, 74, 0.9);
+        color: #f1f1f1;
+        font-size: 1.2rem;
+    }
+
+    .times-table tr:nth-child(even) {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .times-table tr:hover {
+        background-color: rgba(110, 127, 134, 0.4);
+    }
+
+    button {
+        background: linear-gradient(to right, #68d1ca, #4ecdc4);
+        color: #555555;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 1rem;
+        border-radius: 5px;
+        margin-top: 10px;
+        transition: background 0.3s ease;
+    }
+
+    button:hover {
+        background: linear-gradient(to right, #94efe9, #83f0e9);
+    }
+</style>
 </html>
