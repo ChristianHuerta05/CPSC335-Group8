@@ -26,13 +26,13 @@ analyzing, and visualizing the performance of various sorting techniques in Pyth
 ###Libraries Used:
 
 ## How to Run the Project
-1. **Clone the Repository**: Start by cloning this repository to your local machine.
+1. **Clone the Repository**: Start by cloning this repository to your machine.
     ```bash
     git clone <repository-url>
     ```
    
 2. **Set Up a Virtual Environment**:
-    - Create a virtual environment (recommended to keep dependencies isolated).
+    - Create a virtual environment.
     ```bash
     python3 -m venv env
     ```
@@ -47,7 +47,7 @@ analyzing, and visualizing the performance of various sorting techniques in Pyth
             ```
 
 3. **Install Dependencies**:
-    - Navigate to the project directory and install the required Python packages using `pip`:
+    - Navigate to the project directory and install the Python packages using `pip`:
     ```bash
     pip install -r requirements.txt
     ```
@@ -57,7 +57,7 @@ analyzing, and visualizing the performance of various sorting techniques in Pyth
     ```bash
     python app.py
     ```
-    - By default, the app runs on `http://127.0.0.1:5000`. Open this URL in your web browser to access the application. Note: The URL may vary depending on your machine's configuration.
+    - By default, the app runs on `http://127.0.0.1:5000`. Open this URL in your web browser to access the app.
 
 5. **Access the Application**:
-    - Open your web browser and navigate to the default Flask server location: [http://127.0.0.1:5000](http://127.0.0.1:5000).
+    - Open your web browser and go to the default Flask server location: [http://127.0.0.1:5000](http://127.0.0.1:5000).
